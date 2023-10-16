@@ -170,7 +170,7 @@ def add_invoice_details(driver,week_number):
         try:
             qty_element = driver.find_element(By.CLASS_NAME, "qty-field")
             qty_element.clear()
-            qty_element.send_keys(hours_worked_this_week)
+            qty_element.send_keys(str(hours_worked_this_week))
             print("Entered '" + hours_worked_this_week +"' in the quantity field")
             break
         except StaleElementReferenceException:
