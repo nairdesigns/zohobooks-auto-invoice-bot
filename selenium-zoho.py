@@ -67,8 +67,38 @@ def click_trust_button(driver):
             print("Clicked the 'Trust' button successfully.")
             break  # Exit the loop if successful
         except Exception as e:
-            print("Trust button not found or an error occurred:", str(e))
+        print("Trust button not found or an error occurred:", str(e))
             print("Retrying...")
+
+def current_week_number():
+    today = datetime.date.today()
+    
+    # Calculate the start date (Monday) of the current week
+    if today.day <= 15:
+        # First half of the month, start from the beginning of the month
+        start_date = today.replace(day=1)
+    else:
+        # Second half of the month, start from the first Monday after the 15th
+        next_month = today.replace(day=15) + datetime.timedelta(days=1)
+        while next_month.weekday() != 0:  # 0 represents Monday
+            next_month += datetime.timedelta(days=1)
+        start_date = next_month
+    
+    # Calculate the week number
+    week_number = (today - start_date).days // 7 + 1
+
+    return week_number
+
+def first_half_of_month():
+    today = datetime.date.today()
+    # Calculate the midpoint day of the month (15th)
+    midpoint_day = datetime.date(today.year, today.month, 15)
+    
+    # Compare today's date with the midpoint
+    if today <= midpoint_day:
+        return True
+    else:
+        return False
 
 # Function to skip weekends and calculate the end date accordingly
 def skip_weekends(start_date, days_to_skip):
@@ -79,36 +109,38 @@ def skip_weekends(start_date, days_to_skip):
             days_to_skip -= 1
     return end_date
 
-def week_number_and_dates(number_of_times_looped=None):
+def insert_week_number_and_date_range(week_number=None):
     today = datetime.date.today()
     
-    # Calculate the start date (Sunday) and end date (Thursday) of the current week
-    start_date = today - datetime.timedelta(days=today.weekday() + 1)
+    # Calculate the start date (Monday) and end date (Friday) of the current week
+    if today.day <= 15:
+        # First half of the month, start from the beginning of the month
+        start_date = today.replace(day=1)
+    else:
+        # Second half of the month, start from the first Monday after the 15th
+        next_month = today.replace(day=15) + datetime.timedelta(days=1)
+        while next_month.weekday() != 0:  # 0 represents Monday
+            next_month += datetime.timedelta(days=1)
+        start_date = next_month
+        
     end_date = start_date + datetime.timedelta(days=4)
-    
-    # Check if the week overlaps with the next month
-    if end_date.month != start_date.month:
-        end_date = start_date + datetime.timedelta(days=1)
 
+    # Skip weekends
     end_date = skip_weekends(start_date, (end_date - start_date).days)
-
-    # Calculate the week number
-    week_number = (end_date - start_date).days // 7 + 1
 
     # Format the output
     month_name = today.strftime("%B")
     week_range = f"{start_date.day} - {end_date.day}"
-    console.log('current number of times looped' + number_of_times_looped)
-    return f"Week {week_number}: {month_name} {week_range}", number_of_times_looped
+    return f"Week {week_number}: {month_name} {week_range}"
 
-def add_invoice_details(driver):
+def add_invoice_details(driver,week_number):
     hours_worked_this_week = round(random.uniform(29.5, 30), 2)
     driver.implicitly_wait(10)
     print("Implicitly waiting for 10 seconds")
     
     element = driver.find_element(By.CLASS_NAME, "zb-invoice-item-textarea")
-    element.send_keys(week_number_and_dates())
-    print("Entered '" + week_number_and_dates() + "' in the invoice item textarea")
+    element.send_keys(insert_week_number_and_date_range(weak_number))
+    print("Entered '" + insert_week_number_and_date_range() + "' in the invoice item textarea")
     
     max_attempts = 3
     attempts = 0
@@ -144,6 +176,11 @@ def save_invoice(driver):
     save_button = driver.find_element(By.ID, "save_invoice")
     save_button.click()
 
+def is_last_week_of_month():
+    today = datetime.date.today()
+    next_month = today.replace(day=28) + datetime.timedelta(days=4)  # Go to the last day of the current month
+    return today.month != next_month.month
+
 def wait_for_invoice_creation(driver):
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "invoice_created_message")))
     print("Invoice created successfully")
@@ -161,6 +198,7 @@ if __name__ == "__main__":
         login_zoho_invoice(driver, username, password)
         enter_authorization_code(driver)
         click_trust_button(driver)
+        current_week_number = current_week_number()
         add_invoice_details(driver)
         save_invoice(driver)
         wait_for_invoice_creation(driver)
