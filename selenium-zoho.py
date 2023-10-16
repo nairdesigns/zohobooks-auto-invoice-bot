@@ -152,7 +152,8 @@ if __name__ == "__main__":
     config = load_configuration('config.yaml')
     username = config['username']
     password = config['password']
-    driver = webdriver.Chrome(executable_path="/home/nairb/.wdm/drivers/chromedriver/linux64/117.0.5938.149/chromedriver-linux64/chromedriver")
+    path_to_driver = config['path_to_driver'] 
+    driver = webdriver.Chrome(executable_path=path_to_driver)
     print("Starting Selenium script")
     pass
     # Run the code:
