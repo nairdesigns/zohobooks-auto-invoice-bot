@@ -58,4 +58,4 @@ This script is designed to create invoices for services based on an hourly rate 
 3. Run the script, and it will log in, create a new invoice, and populate it with the week's details, including the week number, dates, hourly rate, and the number of hours worked per week.
 
 4. Review the generated invoice to ensure accuracy and click 'Save' in Zoho Invoice to finalize the invoice creation.
-REMEMBER to NOT upload your config.yaml file! (everyone will see you password lol)
+## REMEMBER to NOT upload your config.yaml file! (everyone will see you password lol)
