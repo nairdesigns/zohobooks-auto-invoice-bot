@@ -85,8 +85,20 @@ def current_week_number():
         start_date = next_month
     
     # Calculate the week number
-    week_number = (today - start_date).days // 7 + 1
+    current_week_number = (today - start_date).days // 7 + 1
 
+    return current_week_number
+
+def get_week_number():
+    if first_half_of_month():
+        week_number = 1
+    else:
+        # Find the week number of the first Monday after the 15th
+        day = 16  # Start from 16th day
+        while date(today.year, today.month, day).weekday() != 0:  # 0 is Monday
+            day += 1
+        week_number = date(today.year, today.month, day).isocalendar()[1]
+    
     return week_number
 
 def first_half_of_month():
@@ -108,6 +120,14 @@ def skip_weekends(start_date, days_to_skip):
         if end_date.weekday() < 6:  # Check if it's not a weekend (0=Sunday, 6=Saturday)
             days_to_skip -= 1
     return end_date
+
+def last_week_of_current_month():
+    now = datetime.now()
+    year = now.year
+    month = now.month
+    _, last_day = calendar.monthrange(year, month)
+    last_week = (last_day - 1) // 7 + 1
+    return last_week
 
 def insert_week_number_and_date_range(week_number=None):
     today = datetime.date.today()
@@ -198,8 +218,13 @@ if __name__ == "__main__":
         login_zoho_invoice(driver, username, password)
         enter_authorization_code(driver)
         click_trust_button(driver)
-        current_week_number = current_week_number()
-        add_invoice_details(driver)
+        while True:
+            week_number = get_week_number()
+            add_invoice_details(driver, week_number)
+            week_number += 1
+
+            if week_number == last_week_of_current_month() + 1:
+                break
         save_invoice(driver)
         wait_for_invoice_creation(driver)
     except (NoSuchElementException, TimeoutException) as e:
