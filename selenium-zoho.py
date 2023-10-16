@@ -1,4 +1,5 @@
 from datetime import datetime, date, timedelta
+import calendar
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -171,7 +172,7 @@ def add_invoice_details(driver,week_number):
             qty_element = driver.find_element(By.CLASS_NAME, "qty-field")
             qty_element.clear()
             qty_element.send_keys(str(hours_worked_this_week))
-            print("Entered '" + hours_worked_this_week +"' in the quantity field")
+            print("Entered '" + str(hours_worked_this_week) +"' in the quantity field")
             break
         except StaleElementReferenceException:
             attempts += 1
