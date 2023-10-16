@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime, date, timedelta
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -79,9 +79,9 @@ def current_week_number():
         start_date = today.replace(day=1)
     else:
         # Second half of the month, start from the first Monday after the 15th
-        next_month = today.replace(day=15) + datetime.timedelta(days=1)
+        next_month = today.replace(day=15) + timedelta(days=1)
         while next_month.weekday() != 0:  # 0 represents Monday
-            next_month += datetime.timedelta(days=1)
+            next_month += timedelta(days=1)
         start_date = next_month
     
     # Calculate the week number
@@ -90,6 +90,8 @@ def current_week_number():
     return current_week_number
 
 def get_week_number():
+    today = date.today()
+    day = today.day
     if first_half_of_month():
         week_number = 1
     else:
@@ -102,9 +104,9 @@ def get_week_number():
     return week_number
 
 def first_half_of_month():
-    today = datetime.date.today()
+    today = date.today()
     # Calculate the midpoint day of the month (15th)
-    midpoint_day = datetime.date(today.year, today.month, 15)
+    midpoint_day = date(today.year, today.month, 15)
     
     # Compare today's date with the midpoint
     if today <= midpoint_day:
@@ -116,7 +118,7 @@ def first_half_of_month():
 def skip_weekends(start_date, days_to_skip):
     end_date = start_date
     while days_to_skip > 0:
-        end_date += datetime.timedelta(days=1)
+        end_date += timedelta(days=1)
         if end_date.weekday() < 6:  # Check if it's not a weekend (0=Sunday, 6=Saturday)
             days_to_skip -= 1
     return end_date
@@ -130,7 +132,7 @@ def last_week_of_current_month():
     return last_week
 
 def insert_week_number_and_date_range(week_number=None):
-    today = datetime.date.today()
+    today = date.today()
     
     # Calculate the start date (Monday) and end date (Friday) of the current week
     if today.day <= 15:
@@ -138,12 +140,12 @@ def insert_week_number_and_date_range(week_number=None):
         start_date = today.replace(day=1)
     else:
         # Second half of the month, start from the first Monday after the 15th
-        next_month = today.replace(day=15) + datetime.timedelta(days=1)
+        next_month = today.replace(day=15) + timedelta(days=1)
         while next_month.weekday() != 0:  # 0 represents Monday
-            next_month += datetime.timedelta(days=1)
+            next_month += timedelta(days=1)
         start_date = next_month
         
-    end_date = start_date + datetime.timedelta(days=4)
+    end_date = start_date + timedelta(days=4)
 
     # Skip weekends
     end_date = skip_weekends(start_date, (end_date - start_date).days)
@@ -197,8 +199,8 @@ def save_invoice(driver):
     save_button.click()
 
 def is_last_week_of_month():
-    today = datetime.date.today()
-    next_month = today.replace(day=28) + datetime.timedelta(days=4)  # Go to the last day of the current month
+    today = date.today()
+    next_month = today.replace(day=28) + timedelta(days=4)  # Go to the last day of the current month
     return today.month != next_month.month
 
 def wait_for_invoice_creation(driver):
