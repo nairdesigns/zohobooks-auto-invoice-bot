@@ -71,7 +71,7 @@ def click_trust_button(driver):
             print("Retrying...")
 
 def current_week_number():
-    today = datetime.date.today()
+    today = date.today()
     
     # Calculate the start date (Monday) of the current week
     if today.day <= 15:
