@@ -163,6 +163,8 @@ def add_invoice_details(driver,week_number):
     
     element = driver.find_element(By.CLASS_NAME, "zb-invoice-item-textarea")
     element.send_keys(insert_week_number_and_date_range(week_number))
+    # TODO make sure to select second row!!!
+    # TODO split this into seperate funcitons for reaadability, might have to use for each statement to select next row 
     print("Entered '" + insert_week_number_and_date_range() + "' in the invoice item textarea")
     
     max_attempts = 3
