@@ -161,7 +161,7 @@ def add_invoice_details(driver,week_number):
     print("Implicitly waiting for 10 seconds")
     
     element = driver.find_element(By.CLASS_NAME, "zb-invoice-item-textarea")
-    element.send_keys(insert_week_number_and_date_range(weak_number))
+    element.send_keys(insert_week_number_and_date_range(week_number))
     print("Entered '" + insert_week_number_and_date_range() + "' in the invoice item textarea")
     
     max_attempts = 3
