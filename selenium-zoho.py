@@ -79,7 +79,7 @@ def skip_weekends(start_date, days_to_skip):
             days_to_skip -= 1
     return end_date
 
-def week_number_and_dates():
+def week_number_and_dates(number_of_times_looped=None):
     today = datetime.date.today()
     
     # Calculate the start date (Sunday) and end date (Thursday) of the current week
@@ -98,8 +98,8 @@ def week_number_and_dates():
     # Format the output
     month_name = today.strftime("%B")
     week_range = f"{start_date.day} - {end_date.day}"
-
-    return f"Week {week_number}: {month_name} {week_range}"
+    console.log('current number of times looped' + number_of_times_looped)
+    return f"Week {week_number}: {month_name} {week_range}", number_of_times_looped
 
 def add_invoice_details(driver):
     hours_worked_this_week = round(random.uniform(29.5, 30), 2)
@@ -108,7 +108,7 @@ def add_invoice_details(driver):
     
     element = driver.find_element(By.CLASS_NAME, "zb-invoice-item-textarea")
     element.send_keys(week_number_and_dates())
-    print("Entered 'test!' in the invoice item textarea")
+    print("Entered '" + week_number_and_dates() + "' in the invoice item textarea")
     
     max_attempts = 3
     attempts = 0
@@ -117,7 +117,7 @@ def add_invoice_details(driver):
             qty_element = driver.find_element(By.CLASS_NAME, "qty-field")
             qty_element.clear()
             qty_element.send_keys(hours_worked_this_week)
-            print("Entered '200' in the quantity field")
+            print("Entered '" + hours_worked_this_week +"' in the quantity field")
             break
         except StaleElementReferenceException:
             attempts += 1
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     config = load_configuration('config.yaml')
     username = config['username']
     password = config['password']
-    path_to_driver = config['path_to_driver'] 
+    path_to_driver = config['path_to driver'] 
     driver = webdriver.Chrome(executable_path=path_to_driver)
     print("Starting Selenium script")
     pass
