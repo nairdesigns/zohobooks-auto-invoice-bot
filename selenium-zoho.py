@@ -67,7 +67,7 @@ def click_trust_button(driver):
             print("Clicked the 'Trust' button successfully.")
             break  # Exit the loop if successful
         except Exception as e:
-        print("Trust button not found or an error occurred:", str(e))
+            print("Trust button not found or an error occurred:", str(e))
             print("Retrying...")
 
 def current_week_number():
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     config = load_configuration('config.yaml')
     username = config['username']
     password = config['password']
-    path_to_driver = config['path_to driver'] 
+    path_to_driver = config['path_to_driver'] 
     driver = webdriver.Chrome(executable_path=path_to_driver)
     print("Starting Selenium script")
     pass
