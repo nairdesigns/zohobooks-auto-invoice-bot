@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -218,6 +218,7 @@ if __name__ == "__main__":
         login_zoho_invoice(driver, username, password)
         enter_authorization_code(driver)
         click_trust_button(driver)
+        current_week_number = current_week_number()
         while True:
             week_number = get_week_number()
             add_invoice_details(driver, week_number)
