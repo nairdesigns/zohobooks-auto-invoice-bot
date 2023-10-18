@@ -235,10 +235,10 @@ if __name__ == "__main__":
         current_week_number = current_week_number()
         while True:
             week_number = get_week_number()
-            print('debug week_number' + week_number)
+            print('debug week_number' + str(week_number))
             add_invoice_details(driver, week_number)
             week_number += 1
-            print('debug week_number' + last_week_of_current_month())
+            print('debug week_number' + str(last_week_of_current_month())
             if week_number == last_week_of_current_month() + 1:
                 print('loop broken')
                 break
