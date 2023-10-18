@@ -208,7 +208,6 @@ def add_invoice_details(driver, week_number):
     element.click()
     print("Clicked the 'btn.btn-md' button")
 
-    invoice_row_complete = Truedef save_invoice(driver):
     save_button = driver.find_element(By.ID, "save_invoice")
     save_button.click()
 
