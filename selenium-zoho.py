@@ -156,46 +156,52 @@ def insert_week_number_and_date_range(week_number=None):
     week_range = f"{start_date.day} - {end_date.day}"
     return f"Week {week_number}: {month_name} {week_range}"
 
-def add_invoice_details(driver,week_number):
+
+def add_invoice_details(driver, week_number):
     hours_worked_this_week = round(random.uniform(29.5, 30), 2)
     driver.implicitly_wait(10)
     print("Implicitly waiting for 10 seconds")
+
+    # Store elements in separate arrays
+    item_textareas = driver.find_elements(By.CLASS_NAME, "zb-invoice-item-textarea")
+    qty_fields = driver.find_elements(By.CLASS_NAME, "qty-field")
+    rate_fields = driver.find_elements(By.CSS_SELECTOR, '[data-integrity="line_items.0.rate"]')
     
-    element = driver.find_element(By.CLASS_NAME, "zb-invoice-item-textarea")
-    element.send_keys(insert_week_number_and_date_range(week_number))
-    # TODO make sure to select second row!!!
-    # TODO split this into seperate funcitons for reaadability, might have to use for each statement to select next row 
-    print("Entered '" + insert_week_number_and_date_range() + "' in the invoice item textarea")
-    
-    max_attempts = 3
-    attempts = 0
-    while attempts < max_attempts:
-        try:
-            qty_element = driver.find_element(By.CLASS_NAME, "qty-field")
-            qty_element.clear()
-            qty_element.send_keys(str(hours_worked_this_week))
-            print("Entered '" + str(hours_worked_this_week) +"' in the quantity field")
-            break
-        except StaleElementReferenceException:
-            attempts += 1
-            print("StaleElementReferenceException occurred. Retrying...")
-    
-    attempts = 0
-    while attempts < max_attempts:
-        try:
-            rate_element = driver.find_element(By.CSS_SELECTOR, '[data-integrity="line_items.0.rate"]')
-            rate_element.clear()
-            rate_element.send_keys("30")
-            print("Entered '30' in the rate field")
-            break
-        except StaleElementReferenceException:
-            attempts += 1
-            print("StaleElementReferenceException occurred. Retrying...")
-    
+    for i in range(len(item_textareas)):
+        item_textarea = item_textareas[i]
+        qty_field = qty_fields[i]
+        rate_field = rate_fields[i]
+
+        item_textarea.send_keys(insert_week_number_and_date_range(week_number))
+        print("Entered '" + insert_week_number_and_date_range(week_number) + "' in the invoice item textarea")
+
+        max_attempts = 3
+        attempts = 0
+        while attempts < max_attempts:
+            try:
+                qty_field.clear()
+                qty_field.send_keys(str(hours_worked_this_week))
+                print("Entered '" + str(hours_worked_this_week) + "' in the quantity field")
+                break
+            except StaleElementReferenceException:
+                attempts += 1
+                print("StaleElementReferenceException occurred. Retrying...")
+
+        attempts = 0
+        while attempts < max_attempts:
+            try:
+                rate_field.clear()
+                rate_field.send_keys("30")
+                print("Entered '30' in the rate field")
+                break
+            except StaleElementReferenceException:
+                attempts += 1
+                print("StaleElementReferenceException occurred. Retrying")
+
     element = driver.find_element(By.CLASS_NAME, "btn.btn-md")
     element.click()
     print("Clicked the 'btn.btn-md' button")
-    
+
     invoice_row_complete = True
 def save_invoice(driver):
     save_button = driver.find_element(By.ID, "save_invoice")
