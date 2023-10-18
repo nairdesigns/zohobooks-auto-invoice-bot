@@ -92,17 +92,14 @@ def current_week_number():
 
 def get_week_number():
     today = date.today()
-    day = today.day
-    if first_half_of_month():
-        week_number = 1
+    if today.day <= 15:
+        return 1
     else:
-        # Find the week number of the first Monday after the 15th
-        day = 16  # Start from 16th day
+        day = 16
         while date(today.year, today.month, day).weekday() != 0:  # 0 is Monday
             day += 1
         week_number = date(today.year, today.month, day).isocalendar()[1]
-    
-    return week_number
+        return min(week_number, 5)
 
 def first_half_of_month():
     today = date.today()
@@ -159,7 +156,7 @@ def insert_week_number_and_date_range(week_number=None):
 def add_invoice_details(driver, week_number):
     week_number = int(week_number)  # Convert week_number to an integer
     row_to_select = week_number - 1
-    print('debug row_to_select:' + row_to_select)
+    print('debug row_to_select:' + str(row_to_select))
     hours_worked_this_week = round(random.uniform(29.5, 30), 2)
     driver.implicitly_wait(10)
     print("Implicitly waiting for 10 seconds")
