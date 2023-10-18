@@ -91,6 +91,7 @@ def current_week_number():
     return current_week_number
 
 def get_week_number():
+    # TODO check if working correctly
     today = date.today()
     if today.day <= 15:
         return 1
