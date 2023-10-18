@@ -158,6 +158,8 @@ def insert_week_number_and_date_range(week_number=None):
 
 def add_invoice_details(driver, week_number):
     week_number = int(week_number)  # Convert week_number to an integer
+    row_to_select = week_number - 1
+    print('debug row_to_select:' + row_to_select)
     hours_worked_this_week = round(random.uniform(29.5, 30), 2)
     driver.implicitly_wait(10)
     print("Implicitly waiting for 10 seconds")
@@ -171,38 +173,35 @@ def add_invoice_details(driver, week_number):
     print("Number of qty fields:", len(qty_fields))
     print("Number of rate fields:", len(rate_fields))
 
-    if week_number < len(item_textareas):
-        item_textarea = item_textareas[week_number]
-        qty_field = qty_fields[week_number]
-        rate_field = rate_fields[week_number]
+    item_textarea = item_textareas[row_to_select]
+    qty_field = qty_fields[row_to_select]
+    rate_field = rate_fields[row_to_select]
 
-        item_textarea.send_keys(insert_week_number_and_date_range(week_number))
-        print("Entered '" + insert_week_number_and_date_range(week_number) + "' in the invoice item textarea")
+    item_textarea.send_keys(insert_week_number_and_date_range(week_number))
+    print("Entered '" + insert_week_number_and_date_range(week_number) + "' in the invoice item textarea")
 
-        max_attempts = 3
-        attempts = 0
-        while attempts < max_attempts:
-            try:
-                qty_field.clear()
-                qty_field.send_keys(str(hours_worked_this_week))
-                print("Entered '" + str(hours_worked_this_week) + "' in the quantity field")
-                break
-            except StaleElementReferenceException:
-                attempts += 1
-                print("StaleElementReferenceException occurred. Retrying...")
+    max_attempts = 3
+    attempts = 0
+    while attempts < max_attempts:
+        try:
+            qty_field.clear()
+            qty_field.send_keys(str(hours_worked_this_week))
+            print("Entered '" + str(hours_worked_this_week) + "' in the quantity field")
+            break
+        except StaleElementReferenceException:
+            attempts += 1
+            print("StaleElementReferenceException occurred. Retrying...")
 
-        attempts = 0
-        while attempts < max_attempts:
-            try:
-                rate_field.clear()
-                rate_field.send_keys("30")
-                print("Entered '30' in the rate field")
-                break
-            except StaleElementReferenceException:
-                attempts += 1
-                print("StaleElementReferenceException occurred. Retrying")
-    else:
-        print("Week number is out of range:", week_number)
+    attempts = 0
+    while attempts < max_attempts:
+        try:
+            rate_field.clear()
+            rate_field.send_keys("30")
+            print("Entered '30' in the rate field")
+            break
+        except StaleElementReferenceException:
+            attempts += 1
+            print("StaleElementReferenceException occurred. Retrying")
 
     element = driver.find_element(By.CLASS_NAME, "btn.btn-md")
     element.click()
@@ -236,9 +235,9 @@ if __name__ == "__main__":
         current_week_number = current_week_number()
         while True:
             week_number = get_week_number()
+            print('debug week_number' + week_number)
             add_invoice_details(driver, week_number)
             week_number += 1
-            print('debug week_number' + week_number)
             print('debug week_number' + last_week_of_current_month())
             if week_number == last_week_of_current_month() + 1:
                 print('loop broken')
