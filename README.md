@@ -59,3 +59,4 @@ This script is designed to create invoices for services based on an hourly rate 
 
 4. Review the generated invoice to ensure accuracy and click 'Save' in Zoho Invoice to finalize the invoice creation.
 ## REMEMBER to NOT upload your config.yaml file! (everyone will see you password lol)
+# nairb-folder
