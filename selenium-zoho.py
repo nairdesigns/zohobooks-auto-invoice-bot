@@ -156,8 +156,8 @@ def insert_week_number_and_date_range(week_number=None):
     week_range = f"{start_date.day} - {end_date.day}"
     return f"Week {week_number}: {month_name} {week_range}"
 
-
 def add_invoice_details(driver, week_number):
+    week_number = int(week_number)  # Convert week_number to an integer
     hours_worked_this_week = round(random.uniform(29.5, 30), 2)
     driver.implicitly_wait(10)
     print("Implicitly waiting for 10 seconds")
@@ -166,11 +166,11 @@ def add_invoice_details(driver, week_number):
     item_textareas = driver.find_elements(By.CLASS_NAME, "zb-invoice-item-textarea")
     qty_fields = driver.find_elements(By.CLASS_NAME, "qty-field")
     rate_fields = driver.find_elements(By.CSS_SELECTOR, '[data-integrity="line_items.0.rate"]')
-    
-    for i in range(len(item_textareas)):
-        item_textarea = item_textareas[i]
-        qty_field = qty_fields[i]
-        rate_field = rate_fields[i]
+
+    if week_number < len(item_textareas):
+        item_textarea = item_textareas[week_number]
+        qty_field = qty_fields[week_number]
+        rate_field = rate_fields[week_number]
 
         item_textarea.send_keys(insert_week_number_and_date_range(week_number))
         print("Entered '" + insert_week_number_and_date_range(week_number) + "' in the invoice item textarea")
@@ -203,6 +203,7 @@ def add_invoice_details(driver, week_number):
     print("Clicked the 'btn.btn-md' button")
 
     invoice_row_complete = True
+
 def save_invoice(driver):
     save_button = driver.find_element(By.ID, "save_invoice")
     save_button.click()
