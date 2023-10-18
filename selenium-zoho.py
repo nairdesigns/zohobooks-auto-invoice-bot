@@ -167,6 +167,10 @@ def add_invoice_details(driver, week_number):
     qty_fields = driver.find_elements(By.CLASS_NAME, "qty-field")
     rate_fields = driver.find_elements(By.CSS_SELECTOR, '[data-integrity="line_items.0.rate"]')
 
+    print("Number of item textareas:", len(item_textareas))
+    print("Number of qty fields:", len(qty_fields))
+    print("Number of rate fields:", len(rate_fields))
+
     if week_number < len(item_textareas):
         item_textarea = item_textareas[week_number]
         qty_field = qty_fields[week_number]
@@ -197,14 +201,14 @@ def add_invoice_details(driver, week_number):
             except StaleElementReferenceException:
                 attempts += 1
                 print("StaleElementReferenceException occurred. Retrying")
+    else:
+        print("Week number is out of range:", week_number)
 
     element = driver.find_element(By.CLASS_NAME, "btn.btn-md")
     element.click()
     print("Clicked the 'btn.btn-md' button")
 
-    invoice_row_complete = True
-
-def save_invoice(driver):
+    invoice_row_complete = Truedef save_invoice(driver):
     save_button = driver.find_element(By.ID, "save_invoice")
     save_button.click()
 
